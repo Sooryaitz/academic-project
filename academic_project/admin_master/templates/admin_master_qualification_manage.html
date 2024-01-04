@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block content %}
+<ul class="breadcrumb">
+    <li><a href="#">Master</a></li>                    
+    <li><a href="#">Manage Qualification</a></li>
+    
+</ul>
+<!-- END BREADCRUMB -->
+
+<!-- PAGE TITLE -->
+<div class="page-title">                    
+    <h2><span class="fa fa-arrow-circle-o-left"></span>Manage Qualification</h2>
+</div>
+<!-- END PAGE TITLE -->                
+
+<!-- PAGE CONTENT WRAPPER -->
+<div class="page-content-wrap">                
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- START DEFAULT DATATABLE -->
+            <div class="panel panel-default">
+                <div class="panel-heading">                                
+                    
+                    <ul class="panel-controls">
+                       
+                        <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                    </ul>                                
+                </div>
+                <form method='post' >
+                    {% csrf_token %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+            <div class="row">
+            <div class="col-md-12">
+                <input type="text" placeholder="Qualification name"  autofocus class="form-control" class="panel-title"  name="qualificationname" required><br>
+            </div>
+            {% comment %} <div class="col-md-6">
+                <input type="text" placeholder="Department code" class="form-control"class="panel-title">
+            </div> {% endcomment %}
+            </div>
+        </div>
+        <div class="panel-body d-flex justify-content-between">
+            <button class="btn btn-default">Clear Form</button>                                    
+            <button class="btn btn-primary pull-right">Submit</button>
+        </div>
+        
+        
+        
+        </div>
+    </form>
+
+    </div>
+</div>
+<div class="page-content-wrap">                
+                
+    <div class="row">
+        <div class="col-md-12">
+
+                     <!-- START DEFAULT DATATABLE -->
+                     <div class="panel panel-default">
+                        <div class="panel-heading">                                
+                            <h3 class="panel-title">Default</h3>
+                            <ul class="panel-controls">
+                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                            </ul>                                
+                        </div>
+                        <div class="panel-body">
+                            <table class="table datatable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>QualificationName</th>
+                                        {% comment %} <th>Code</th> {% endcomment %}
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for qualification in qualifications %}
+                                    <tr id="{{qualification.id}}">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{qualification.qualificationname}}</td>
+                                        {% comment %} <td>Other</td> {% endcomment %}
+                                        <td> {% if qualification.qualificationstatus == 1 %}
+                      <p class="badge badge-success">active
+                       </td>
+                       {% else %}
+                       <p class="badge badge-danger">deactive</td>
+                         {% endif %}</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-rounded"  onclick="edit_qrow({{qualification.id}});">
+                                                <span  id= "spinner{{qualification.id}}" class="fa fa-pencil" ></span>
+                                                
+                                                
+                                            </button>
+                                               
+                                          
+                                            {% if  not qualification.qualificationstatus == 1 %}
+                                            <button class="btn btn-primary btn-rounded" >
+                                                <span  id= "spinner{{qualification.id}}" class="fa fa-trash-o" onClick="delete_qua({{qualification.id}})" >  </button>
+                                                    {% endif %} 
+                                        </td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal" id="modal_basic" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="defModalHead">Edit Qualification</h4>
+                                </div>
+                                
+                                <div class="row">
+                                    
+                                        <div class="panel-body">
+                                            
+                                    <div class="col-md-6">
+                                        <input type="hidden" id="qua">
+                                        <input type="text" placeholder="Qualification name" class="form-control"  id="editqualname"class="panel-title">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-control "id="edtqualstat">
+                                            <option value="1">Active</option>
+                                            <option value="0">Deactivate</option>
+                                        </select> 
+                                    </div>
+                                       
+                                </div>  
+                           
+                                       
+                        </div>  
+                                    {% comment %} <div class="col-md-6">
+                                        <input type="text" placeholder="Qualification code" class="form-control"class="panel-title">
+                                    </div> {% endcomment %}
+                                      
+                                                                  
+                                
+                                
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary pull-right" onclick="update_qualrow();"data-dismiss="modal">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/edit_qual_ajax" id="qual">
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/update_qualif_ajax" id="qpath">
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/delete_qualif_ajax" id="qu">
+
+                    <div class="message-box animated fadeIn" data-sound="alert" id="mb-remove-row">
+                        <div class="mb-container">
+                            <div class="mb-middle">
+                                <div class="mb-title"><span class="fa fa-times"></span> Remove <strong>Data</strong> ?</div>
+                                <div class="mb-content">
+                                    <p>Are you sure you want to remove this row?</p>                    
+                                    <p>Press Yes if you sure.</p>
+                                </div>
+                                <div class="mb-footer">
+                                    <div class="pull-right">
+                                        <button class="btn btn-success btn-lg mb-control-yes">Yes</button>
+                                        <button class="btn btn-default btn-lg mb-control-close">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+{% endblock   %}

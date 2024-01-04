@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block content %}
+<ul class="breadcrumb">
+    <li><a href="#">Master</a></li>                    
+    <li><a href="#">Manage Department</a></li>
+    
+</ul>
+<!-- END BREADCRUMB -->
+
+<!-- PAGE TITLE -->
+<div class="page-title">                    
+    <h2><span class="fa fa-arrow-circle-o-left"></span>Manage Department</h2>
+</div>
+<!-- END PAGE TITLE -->                
+
+<!-- PAGE CONTENT WRAPPER -->
+<div class="page-content-wrap">                
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- START DEFAULT DATATABLE -->
+            <div class="panel panel-default">
+                <div class="panel-heading">                                
+                    <h2> Add Deprtment <h2>
+                    <ul class="panel-controls">
+                       
+                        <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                    </ul>                                
+                </div>
+                
+                <form method='post' >
+                    {% csrf_token %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+            <div class="row">
+            <div class="col-md-6">
+                <input type="text" placeholder="Department name"  autofocus class="form-control" class="panel-title" name="deptname" required><br>
+            </div>
+            <div class="col-md-6">
+                <input type="text" placeholder="Department code"   class="form-control"class="panel-title" name="deptcode" required><br>
+
+            </div>
+            </div>
+        </div>
+        <div class="panel-body d-flex justify-content-between">
+            <button class="btn btn-default">Clear Form</button>                                    
+            <button class="btn btn-primary pull-right">Submit</button>
+        </div>
+       
+        </div>
+    </form>
+
+    </div>
+</div>
+<div class="page-content-wrap">                
+                
+    <div class="row">
+        <div class="col-md-12">
+
+                     <!-- START DEFAULT DATATABLE -->
+                     <div class="panel panel-default">
+                        <div class="panel-heading">                                
+                            <h3 class="panel-title">View Deprtment</h3>
+                            <ul class="panel-controls">
+                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                            </ul>                                
+                        </div>
+                        <div class="panel-body">
+                            <table class="table datatable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Department Name</th>
+                                        <th>Code</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for department in departments %}
+                                    <tr id="{{department.id}}">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ department.deptname }} </td>
+                                        <td>{{ department.deptcode }}</td>
+                                        <td> {% if department.deptstatus == 1 %}
+                                                <p class="badge badge-success">active</p>
+                      
+                                                {% else %}
+                                                <p class="badge badge-danger">deactive</p>
+                                             {% endif %}</td>
+                        
+                                        <td>
+                                            <button class="btn btn-primary btn-rounded"  onclick="edit_row({{department.id}});">
+                                                <span  id= "spinner{{department.id}}" class="fa fa-pencil" ></span>
+                                                
+                                            </button>
+                                               
+                                          
+                                            {% if  not department.deptstatus == 1 %}
+                                            <button class="btn btn-primary btn-rounded" >
+                                                <span  id= "spinner{{department.id}}" class="fa fa-trash-o" onClick="delete_dep({{department.id}})" >  </button>
+                                                    {% endif %}        
+                                        </td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+
+                    <div class="modal" id="modal_basic" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="defModalHead">Edit Department</h4>
+                                </div>
+                                <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="hidden" id="dep">
+                                        <input type="text" placeholder="Department name" class="form-control" id="editdepname" class="panel-title">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" placeholder="Department code" class="form-control" id="editdepcode"class="panel-title">
+                                    </div><br></br>
+                                   
+                                    <div class="col-md-12">
+                                        <select class="form-control"  id="edtdepstat">
+                                            <option value="1">Active</option>
+                                            <option value="0">Deactivate</option>
+                                        </select> 
+                                    </div> 
+                                     </div> 
+                                    </div> 
+                                  
+                                
+                                
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary pull-right"  onclick="update_row();" >Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/edit_dept_ajax" id="urlsfooter">
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/update_dept_ajax" id="txtpath">
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/delete_dept_ajax" id="del">
+
+                    <div class="message-box animated fadeIn" data-sound="alert" id="mb-remove-row">
+                        <div class="mb-container">
+                            <div class="mb-middle">
+                                <div class="mb-title"><span class="fa fa-times"></span> Remove <strong>Data</strong> ?</div>
+                                <div class="mb-content">
+                                    <p>Are you sure you want to remove this row?</p>                    
+                                    <p>Press Yes if you sure.</p>
+                                </div>
+                                <div class="mb-footer">
+                                    <div class="pull-right">
+                                        <button class="btn btn-success btn-lg mb-control-yes">Yes</button>
+                                        <button class="btn btn-default btn-lg mb-control-close">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+{% endblock   %}

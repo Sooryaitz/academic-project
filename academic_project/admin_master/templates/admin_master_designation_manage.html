@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block content %}
+<ul class="breadcrumb">
+    <li><a href="#">Master</a></li>                    
+    <li><a href="#">Manage Designation</a></li>
+    
+</ul>
+<!-- END BREADCRUMB -->
+
+<!-- PAGE TITLE -->
+<div class="page-title">                    
+    <h2><span class="fa fa-arrow-circle-o-left"></span>Manage Designation</h2>
+</div>
+<!-- END PAGE TITLE -->                
+
+<!-- PAGE CONTENT WRAPPER -->
+<div class="page-content-wrap">                
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- START DEFAULT DATATABLE -->
+            <div class="panel panel-default">
+                <div class="panel-heading">                                
+                    
+                    <ul class="panel-controls">
+                       
+                        <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                    </ul>                                
+                </div>
+                <form method='post' >
+                    {% csrf_token %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+            <div class="row">
+            <div class="col-md-6">
+                <input type="text" placeholder="Designation name"  autofocus class="form-control" class="panel-title" name="designame" required><br>
+            </div>
+            <div class="col-md-6">
+                <input type="text" placeholder="Designation code" class="form-control"class="panel-title" name="desigcode" required><br>
+            </div>
+            </div>
+        </div>
+        <div class="panel-body d-flex justify-content-between">
+            <button class="btn btn-default">Clear Form</button>                                    
+            <button class="btn btn-primary pull-right">Submit</button>
+        </div>
+        
+        
+        
+        </div>
+    </form>
+
+    </div>
+</div>
+<div class="page-content-wrap">                
+                
+    <div class="row">
+        <div class="col-md-12">
+
+                     <!-- START DEFAULT DATATABLE -->
+                     <div class="panel panel-default">
+                        <div class="panel-heading">                                
+                            <h3 class="panel-title">Default</h3>
+                            <ul class="panel-controls">
+                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                            </ul>                                
+                        </div>
+                        <div class="panel-body">
+                            <table class="table datatable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Designation Name</th>
+                                        <th>Code</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for designation in designations %}
+                                    <tr id="{{designation.id}}">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ designation.designame }}</td>
+                                        <td>{{ designation.desigcode }}</td>
+                                        <td> {%if designation.desigstatus == 1  %}
+                      <p class="badge badge-success">active
+                       </td>
+                       {% else %}
+                       <p class="badge badge-danger">deactive</td>
+                         {% endif %}</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-rounded"  onclick="edit_desirow({{designation.id}});">
+                                                <span  id= "spinner{{designation.id}}" class="fa fa-pencil" ></span>
+                                                
+                                            </button>
+                                               
+                                          
+                                            
+                                           
+                                            {% if  not designation.desigstatus == 1 %}
+                                            <button class="btn btn-primary btn-rounded" >
+                                                <span  id= "spinner{{designation.id}}" class="fa fa-trash-o" onClick="delete_des({{designation.id}})" >  </button>
+                                                    {% endif %}   
+                                        
+                                    </tr>
+                                    {% endfor %}
+                   
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal" id="modal_basic" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="defModalHead">Edit Designation</h4>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6" >
+                                        <input type="hidden" id="des">
+                                        <input type="text" placeholder="Designation name" class="form-control"  id="editdesname"class="panel-title">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" placeholder="Designation code" class="form-control"  id="editdescode"class="panel-title">
+                                    </div>
+                                       
+                                </div>     
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                    <div class="col-md-12">
+                                        <select class="form-control" id="edtdesstat">
+                                            <option value="1">Active</option>
+                                            <option value="0">Deactivate</option>
+                                        </select> 
+                                    </div> 
+                                     </div> 
+                                    </div> 
+                                  
+                                
+                                
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary pull-right" data-dismiss="modal" onclick="update_desrow();">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/edit_desig_ajax" id="footer">
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/update_desig_ajax" id="path">
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/delete_desig_ajax" id="del">
+
+
+                    <div class="message-box animated fadeIn" data-sound="alert" id="mb-remove-row">
+                        <div class="mb-container">
+                            <div class="mb-middle">
+                                <div class="mb-title"><span class="fa fa-times"></span> Remove <strong>Data</strong> ?</div>
+                                <div class="mb-content">
+                                    <p>Are you sure you want to remove this row?</p>                    
+                                    <p>Press Yes if you sure.</p>
+                                </div>
+                                <div class="mb-footer">
+                                    <div class="pull-right">
+                                        <button class="btn btn-success btn-lg mb-control-yes">Yes</button>
+                                        <button class="btn btn-default btn-lg mb-control-close">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+{% endblock   %}

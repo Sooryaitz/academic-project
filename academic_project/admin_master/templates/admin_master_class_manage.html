@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block content %}
+<ul class="breadcrumb">
+    <li><a href="#">Master</a></li>                    
+    <li><a href="#">Manage class</a></li>
+    
+</ul>
+<!-- END BREADCRUMB -->
+
+<!-- PAGE TITLE -->
+<div class="page-title">                    
+    <h2><span class="fa fa-arrow-circle-o-left"></span>Manage class</h2>
+</div>
+<!-- END PAGE TITLE -->                
+
+<!-- PAGE CONTENT WRAPPER -->
+<div class="page-content-wrap">                
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- START DEFAULT DATATABLE -->
+            <div class="panel panel-default">
+                <div class="panel-heading">                                
+                    
+                    <ul class="panel-controls">
+                       
+                        <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                    </ul>                                
+                </div>
+                <form method='post' >
+                    {% csrf_token %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+            <div class="row">
+            <div class="col-md-12">
+                <input type="text" placeholder="class name"  autofocus class="form-control" class="panel-title"name="classname" required><br>
+            </div>
+            {% comment %} <div class="col-md-6">
+                <input type="text" placeholder="Department code" class="form-control"class="panel-title">
+            </div> {% endcomment %}
+            </div>
+        </div>
+        <div class="panel-body d-flex justify-content-between">
+            <button class="btn btn-default">Clear Form</button>                                    
+            <button class="btn btn-primary pull-right">Submit</button>
+        </div>
+        
+        
+        
+        </div>
+    </form>
+
+    </div>
+</div>
+<div class="page-content-wrap">                
+                
+    <div class="row">
+        <div class="col-md-12">
+
+                     <!-- START DEFAULT DATATABLE -->
+                     <div class="panel panel-default">
+                        <div class="panel-heading">                                
+                            <h3 class="panel-title">Default</h3>
+                            <ul class="panel-controls">
+                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                            </ul>                                
+                        </div>
+                        <div class="panel-body">
+                            <table class="table datatable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>class Name</th>
+                                        {% comment %} <th>Code</th> {% endcomment %}
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for academicclass in classes %}
+                                    <tr id="{{academicclass.id}}">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ academicclass.classname }}</td>
+                                        {% comment %} <td>Other</td> {% endcomment %}
+                                        <td> {% if academicclass.classstatus == 1 %}
+                      <p class="badge badge-success">active
+                       </td>
+                       {% else %}
+                       <p class="badge badge-danger">deactive</td>
+                         {% endif %}</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-rounded"  onclick="edit_classrow({{academicclass.id}});">
+                                                <span  id= "spinner{{academicclass.id}}" class="fa fa-pencil" ></span>
+                                                
+                                            </button>
+                                               
+                                          
+                                            {% if  not academicclass.classstatus == 1 %}
+                                            <button class="btn btn-primary btn-rounded" >
+                                                <span  id= "spinner{{academicclass.id}}" class="fa fa-trash-o" onClick="delete_class({{academicclass.id}})" >  </button>
+                                            {% endif %} 
+                                                </td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal" id="modal_basic" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                  
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="defModalHead">Edit class</h4>
+                                </div>
+                                
+                                <div class="row">
+                                    
+                                        <div class="panel-body">
+                                    <div class="col-md-6">
+                                        <input type="hidden" id="cls">
+                                        <input type="text" placeholder="class name"  id="editclassname" class="form-control" class="panel-title">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-control" id="edtclassstat">
+                                            <option value="1">Active</option>
+                                            <option value="0">Deactivate</option>
+                                        </select> 
+                                    </div>
+                                       
+                                </div>  
+                           
+                                       
+                        </div>  
+                                    {% comment %} <div class="col-md-6">
+                                        <input type="text" placeholder="Qualification code" class="form-control"class="panel-title">
+                                    </div> {% endcomment %}
+                                      
+                                                                  
+                                
+                                
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary pull-right" data-dismiss="modal"  onclick="update_classrow();">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/edit_class_ajax" id="class1">
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/update_class_ajax" id="cpath">
+                    <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/delete_class_ajax" id="classs">
+                    <div class="message-box animated fadeIn" data-sound="alert" id="mb-remove-row">
+                        <div class="mb-container">
+                            <div class="mb-middle">
+                                <div class="mb-title"><span class="fa fa-times"></span> Remove <strong>Data</strong> ?</div>
+                                <div class="mb-content">
+                                    <p>Are you sure you want to remove this row?</p>                    
+                                    <p>Press Yes if you sure.</p>
+                                </div>
+                                <div class="mb-footer">
+                                    <div class="pull-right">
+                                        <button class="btn btn-success btn-lg mb-control-yes">Yes</button>
+                                        <button class="btn btn-default btn-lg mb-control-close">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+{% endblock   %}
