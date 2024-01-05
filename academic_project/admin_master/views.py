@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Academicdepartment,Academicdesignation,Academicqualification,Academicclass,Academicdivision,Academicemployee
+from .models import Academicdepartment,Academicdesignation,Academicqualification,Academicclass,Academicdivision,Academicemployee,AcademicSubject
 from django.contrib import messages
 from django.http import JsonResponse
 from django.conf import settings
@@ -447,9 +447,34 @@ def delete_emp_ajax(request):
     else:
          return JsonResponse({'error': 'Invalid request..error 404','success':''})    
 def subject(request):
+    success_message=None
+    error_message = None
     sub=Academicclass.objects.all()
+    subjectcls=AcademicSubject.objects.all()
+    if request.method == 'POST':
+        selectall= request.POST.getlist('checkboxGroup')
+        subject= request.POST.get('subname').strip()
+        if not subject:
+            # messages.error(request, 'Department name cannot be blank.')
+            error_message ='Subject Name is required.'
+        elif AcademicSubject.objects.filter(subjectclass=subject).exists():
+             error_message='Subject Name already exists.'
+        elif not selectall:
+             error_message='Select atleast one class'
+           
+            # messages.error(request, 'Department with this name already exists.')
+        else:
+            AcademicSubject.objects.create(subjectclass=subject,subjectstatus=0)
+            success_message='Subject added successfully.'
+    context = {
+        'errormessage': error_message,
+        'successmessage': success_message,
+        'sub': sub,
+        'subjectcls' : subjectcls,
+        
+    }
     
-    return render(request, 'subject.html',{"sub":sub})
+    return render(request,'subject.html',context)
           
                
 

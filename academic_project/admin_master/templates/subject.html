@@ -19,7 +19,7 @@
                             <div class="row">
                                 <h3> Add Subject </h3>
                                 <div class="col-md-6">
-                                    <input type="text" placeholder="Employee Category name" autofocus class="form-control" name="empcatname" class="panel-title">
+                                    <input type="text" placeholder="Employee Category name" autofocus class="form-control" name="subname" class="panel-title">
                                 </div>
                             </div>
                         </div>
@@ -27,7 +27,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="row">
-                                <h3>Class <input type="checkbox" class="commonCheckbox pull-right" > </h3>
+                                <h3>Class <input type="checkbox" id="cbox" onclick="check()" class="commonCheckbox pull-right" > </h3>
                             </div>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                     {% for i in sub %}
                         {% if i.classstatus == 1 %}
                             <div>
-                                <input type="checkbox" class="commonCheckbox" name="checkboxGroup" value="Checkbox 3"> {{i.classname}}
+                                <input type="checkbox" class="icheck" name="checkboxGroup" value="{{i.id}}"> {{i.classname}}
                             </div>
                         {% endif %}
                     {% endfor %}    
@@ -56,18 +56,19 @@
                 <div class="panel-body">
                     <table class="table table-striped table-bordered">
                         <thead>
-                            <tr>
-                                <th>Class</th>
-                                <th>Division Status</th>
+                            <tr><th>id</th>
+                                <th>Name</th>
+                                <th> Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for i in sub %}
+                            {% for i in subjectcls %}
                                 <tr>
-                                    <td>{{ i.classname }}</td>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ i.subjectclass }}</td>
                                     <td>
-                                        {% if i.classstatus == 1 %}
+                                        {% if i.subjectstatus == 1 %}
                                             Active
                                         {% else %}
                                             Inactive

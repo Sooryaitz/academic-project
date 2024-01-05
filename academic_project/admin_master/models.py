@@ -36,7 +36,16 @@ class Academicemployee(models.Model):
     employee_cat_area = models.IntegerField(choices=EMPLOYEE_TYPE_CHOICES)
     employee_cat_status=models.IntegerField(default=1)
     
-        
+class AcademicSubject(models.Model):
+    subjectclass= models.CharField(max_length=260)
+    subjectstatus = models.IntegerField(default=1)  
+    
+class SubjectFore(models.Model):
+    classid=models.ForeignKey("Academicclass", on_delete=models.CASCADE)
+    subjectid=models.ForeignKey("AcademicSubject", on_delete=models.CASCADE)
+
+
+    
        
 # Create your models here.
 

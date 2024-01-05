@@ -576,3 +576,11 @@ function delete_emp(rowId) {
         });
     });
 }
+
+function check(){
+    checkbox= document.getElementById("cbox");
+    var checks=document.querySelectorAll('.icheck');
+    checks.forEach(function(cb){
+        cb.checked = checkbox.checked
+    })
+}
