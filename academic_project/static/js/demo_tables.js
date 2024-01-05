@@ -577,10 +577,99 @@ function delete_emp(rowId) {
     });
 }
 
-function check(){
-    checkbox= document.getElementById("cbox");
-    var checks=document.querySelectorAll('.icheck');
-    checks.forEach(function(cb){
-        cb.checked = checkbox.checked
-    })
+// function check(){
+//     checkbox= document.getElementById("cbox");
+//     var checks=document.querySelectorAll('.icheck');
+//     checks.forEach(function(cb){
+//         cb.checked = checkbox.checked
+//     })
+// }
+
+function check() {
+    const checkbox = document.getElementById("cbox");
+    const checks = document.querySelectorAll('.icheck');
+    checks.forEach(function (cb) {
+        cb.checked = checkbox.checked;
+    });
+}
+
+function validateAndSubmit() {
+    const checks = document.querySelectorAll('.icheck:checked');
+
+    if (checks.length === 0) {
+        alert('Please select at least one checkbox before submitting.');
+        return;
+    }
+
+    // If at least one checkbox is selected, proceed with form submission
+    submitForm();
+}
+
+function submitForm() {
+    const form = document.getElementById("myForm");
+    // Perform form submission or further processing here
+    form.submit(); // Example: submit the form
+}
+
+function edit_subrow(id) {
+    document.getElementById('spinner'+id).className="fa fa-spinner";
+    document.getElementById('subb').value=id
+        
+$.ajax({
+    type: "GET",
+    url: document.getElementById("sfooter").value,
+    data:{
+        'id': id
+    },
+    dataType: "json",
+    success: function(data) {
+       document.getElementById("editsubname").value=data.editname;
+    //    document.getElementById("editdepcode").value=data.editcode;
+       document.getElementById("edtsubstat").value=data.editstatus;
+       $("#modal_basic").modal('show');
+       document.getElementById('spinner'+id).className="fa fa-pencil";
+      
+
+    },
+    error: function (error){
+        console.log(error);
+    } 
+});
+}
+
+
+function update_subrow() {
+    
+    var id = document.getElementById("subb").value;
+    var editname = document.getElementById("editsubname").value;
+    // var editcode = document.getElementById("editdescode").value;
+    var editstatus = document.getElementById("edtsubstat").value;
+
+    $.ajax({
+        type: "GET",
+        url: document.getElementById("spath").value, 
+        data: {
+            'id': id,
+            'editname': editname,
+            // 'editcode': editcode,
+            'editstatus': editstatus
+        },
+        dataType: "json",
+        success: function (data) {
+            if(data.success!=''){
+                alert(data.success);
+                $("#modal_basic").modal('hide');
+                window.location.reload(true); 
+            }
+            else{
+                alert(data.error);
+            }
+        },
+        error: function (error) {
+            // Handle error response
+            console.error('error occured:',error);
+           
+ 
+        }
+    });
 }

@@ -1,5 +1,5 @@
-from django.shortcuts import render,redirect
-from .models import Academicdepartment,Academicdesignation,Academicqualification,Academicclass,Academicdivision,Academicemployee,AcademicSubject
+from django.shortcuts import render,redirect,get_object_or_404
+from .models import *
 from django.contrib import messages
 from django.http import JsonResponse
 from django.conf import settings
@@ -391,8 +391,7 @@ def edit_emp_ajax(request):
         
     }
     return JsonResponse(serialized_data)
-from django.http import JsonResponse
-from .models import Academicemployee  # Import your model here
+ # Import your model here
 
 def update_emp_ajax(request):
   if request.method == 'GET':
@@ -464,8 +463,13 @@ def subject(request):
            
             # messages.error(request, 'Department with this name already exists.')
         else:
-            AcademicSubject.objects.create(subjectclass=subject,subjectstatus=0)
-            success_message='Subject added successfully.'
+            subforeign,foreign=AcademicSubject.objects.get_or_create(subjectclass=subject,subjectstatus=0)
+            for clsid in selectall:
+              get =  get_object_or_404(Academicclass,pk=int(clsid))
+              obj= SubjectFore(classid=get,subjectid=subforeign)
+              obj.save()
+              success_message='Subject added successfully.'
+                
     context = {
         'errormessage': error_message,
         'successmessage': success_message,
@@ -476,7 +480,38 @@ def subject(request):
     
     return render(request,'subject.html',context)
           
-               
+def edit_sub_ajax(request):
+    id=request.GET['id']
+    responsedata=AcademicSubject.objects.get(id=id)
+    serialized_data={
+        'editname':responsedata.subjectclass,
+        # 'editcode':responsedata.employee_cat_area,
+        'editstatus':responsedata.subjectstatus,
+    }
+    return JsonResponse(serialized_data)
+                      
 
+def update_sub_ajax(request):
+    
+    if request.method == 'GET':
+        id = request.GET['id']
+        editname = request.GET['editname']
+        # editcode = request.GET['editcode']
+        editstatus = request.GET['editstatus']
+
+        # Update the department details in the 
+        try:
+            academic_Subject = AcademicSubject.objects.get(id=id)
+            if Academicdepartment.objects.exclude(id=id).filter(subjectclass=editname).exists():
+                return JsonResponse({'error':"Subject name already exist",'success':''})
+            # if Academicdepartment.objects.exclude(id=id).filter(deptcode=editcode).exists():
+            #     return JsonResponse({'error':"department code already exist",'success':''})
+            academic_Subject.subjectclass = editname
+            # academic_Subject.deptcode = editcode
+            academic_Subject.subjectstatus = editstatus
+            academic_Subject.save()
+            return JsonResponse({'error':'','success': 'Subject updated successfully'})
+        except AcademicSubject.DoesNotExist:
+            return JsonResponse({'error':'Invalid request method','success':''})
         
                   
