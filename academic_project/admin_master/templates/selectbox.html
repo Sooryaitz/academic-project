@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- PAGE CONTENT WRAPPER -->
+<div class="page-content-wrap">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- First Form: Top Left -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <ul class="panel-controls">
+                        <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                    </ul>
+                </div>
+                <form method='post'>
+                    {% csrf_token %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <h3> Add Subject </h3>
+                                <div class="col-md-6">
+                                    <input type="text" placeholder="Employee Category name" autofocus class="form-control" name="empcatname" class="panel-title">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <h3>Class</h3>
+                                <!-- Checkbox for "Select All" -->
+                                <label class="commonCheckbox">
+                                    <input type="checkbox" class="selectAllCheckbox"> Select All
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Your form content here -->
+                    {% for i in sub %}
+                        {% if i.classstatus == 1 %}
+                            <div>
+                                <!-- Individual checkboxes -->
+                                <label class="commonCheckbox">
+                                    <input type="checkbox" class="commonCheckboxItem" name="checkboxGroup" value="Checkbox 3"> {{i.classname}}
+                                </label>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    <div class="panel-body d-flex justify-content-between">
+                        <button class="btn btn-default">Clear Form</button>
+                        <button class="btn btn-primary pull-right">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!-- Second Form: Top Right -->
+            <!-- ... Existing code for the list of classes ... -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript to handle checkbox functionality
+    document.addEventListener("DOMContentLoaded", function() {
+        const selectAllCheckbox = document.querySelector('.selectAllCheckbox');
+        const commonCheckboxes = document.querySelectorAll('.commonCheckboxItem');
+
+        selectAllCheckbox.addEventListener('change', function() {
+            commonCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+
+        commonCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                if (!this.checked) {
+                    selectAllCheckbox.checked = false;
+                } else {
+                    // Check if all other checkboxes are checked
+                    const allChecked = [...commonCheckboxes].every(checkbox => checkbox.checked);
+                    selectAllCheckbox.checked = allChecked;
+                }
+            });
+        });
+    });
+</script>
+
+
+{% endblock   %}
