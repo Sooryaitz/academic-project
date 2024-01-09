@@ -637,39 +637,93 @@ $.ajax({
 });
 }
 
-
 function update_subrow() {
-    
     var id = document.getElementById("subb").value;
     var editname = document.getElementById("editsubname").value;
-    // var editcode = document.getElementById("editdescode").value;
     var editstatus = document.getElementById("edtsubstat").value;
-
+// alert(id+','+editname+','+editstatus+','+document.getElementById("spath").value)
     $.ajax({
         type: "GET",
-        url: document.getElementById("spath").value, 
+        url: document.getElementById("spath").value,
         data: {
             'id': id,
             'editname': editname,
-            // 'editcode': editcode,
             'editstatus': editstatus
         },
         dataType: "json",
         success: function (data) {
-            if(data.success!=''){
+            if (data.success !== '') {
                 alert(data.success);
                 $("#modal_basic").modal('hide');
-                window.location.reload(true); 
-            }
-            else{
+                // You may want to update specific parts of the page here instead of a full reload
+                window.location.reload(true);
+            } else {
                 alert(data.error);
             }
         },
         error: function (error) {
             // Handle error response
-            console.error('error occured:',error);
-           
- 
+            console.error('Error occurred:', error);
+            alert('An error occurred. Please try again.'); // Display a user-friendly error message
         }
     });
+}
+
+function delete_sub(rowId) {
+        
+    var box = $("#mb-remove-row");
+    box.addClass("open");
+
+    box.find(".mb-control-yes").on("click", function () {
+        box.removeClass("open");
+        // AJAX call to the server to delete the row
+        $.ajax({
+            url: document.getElementById('sdel').value,  // Replace with your actual Django URL
+            type: 'GET',
+            data: {'id': rowId },
+            dataType:"json",
+            success: function (data) {
+                if (data.success) {
+                    $("#" + rowId).hide("slow", function () {
+                        $(this).remove();
+                    });
+                } else {
+                    alert(data.error);
+                }
+               
+   
+            },
+            error: function (error) {
+                console.error('Error:', error);
+               
+            }
+        });
+    });
+}
+
+function view_sub(id) {
+    0
+    document.getElementById('spinner'+id).className="fa fa-spinner";
+    document.getElementById('subb').value=id
+        
+$.ajax({
+    type: "GET",
+    url: document.getElementById("sview").value,
+    data:{
+        'id': id
+    },
+    dataType: "json",
+    success: function(data) {
+       document.getElementById("editsubname").value=data.editname;
+    //    document.getElementById("editdepcode").value=data.editcode;
+       document.getElementById("edtsubstat").value=data.editstatus;
+       $("#modal_basic").modal('show');
+       document.getElementById('spinner'+id).className="fa fa-pencil";
+      
+
+    },
+    error: function (error){
+        console.log(error);
+    } 
+});
 }

@@ -30,6 +30,10 @@ urlpatterns = [
     path('subject/', views.subject, name='subject'),
     path('edit_sub_ajax/', views.edit_sub_ajax, name='edit_sub_ajax'),
     path('update_sub_ajax/',views.update_sub_ajax, name='update_sub_ajax'),
+    path('delete_sub_ajax/', views.delete_sub_ajax, name='delete_sub_ajax'),
+    # path('view_sub_ajax"/', views.view_sub_ajax, name='view_sub_ajax'),
+
+
 
 
 

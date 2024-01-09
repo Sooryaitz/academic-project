@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block content %}
+<ul class="breadcrumb">
+    <li><a href="#">Master</a></li>                    
+    <li><a href="#">Employee Registration</a></li>
+    
+</ul>
+<!-- END BREADCRUMB -->
+
+<!-- PAGE TITLE -->
+<div class="page-title">                    
+    <h2><span class="fa fa-arrow-circle-o-left"></span>Employee Registration</h2>
+</div>
+<!-- END PAGE TITLE -->                
+
+<!-- PAGE CONTENT WRAPPER -->
+<div class="page-content-wrap">                
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <!-- START DEFAULT DATATABLE -->
+            <div class="panel panel-default">
+                <div class="panel-heading">                                
+                    {% comment %} <h2> Register Employee <h2> {% endcomment %}
+                    <ul class="panel-controls">
+                       
+                        <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                    </ul>                                
+                </div>
+                
+                <form method='post' >
+                    {% csrf_token %}
+                   
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form>
+                                    <div class="panel-body">
+                                        <label>Name</label>
+                                        <input type="text" placeholder="Enter name" autofocus class="form-control" name="deptname" required><br>
+                                        
+                                        <label>Date of Birth</label>
+                                        <input type="date" placeholder="Enter DOB" class="form-control" name="deptcode" required><br>
+                                        
+                                        <label>Mobile</label>
+                                        <input type="number" placeholder="Enter mobile" autofocus class="form-control" name="deptname" required><br>
+                                        
+                                        <label>Email</label>
+                                        <input type="Email" placeholder="Enter email" class="form-control" name="deptcode" required><br>
+                                        
+                                        <label>Address</label>
+                                        <input type="address" placeholder="Enter address" autofocus class="form-control" name="deptname" required><br>
+                                        
+                                        <label>Qualification</label>
+                                        <select id="Qualification" class="form-control" name="qualifname">
+                                            {% for Qualification in qualif %}
+                                            <option value="{{Qualification.id}}">{{Qualification.qualificationname}}</option>
+                                            {% endfor %}
+                                        </select><br>
+                                        
+                                        <label>Designation</label>
+                                        <select id="Designation" class="form-control" name="designame">
+                                            {% for designation in emp %}
+                                            <option value="{{designation.id}}">{{designation.designame}}</option>
+                                            {% endfor %}
+                                        </select><br>
+                                        
+                                        <label>Department</label>
+                                        <select id="Department" class="form-control" name="deptname">
+                                            {% for Department in dept %}
+                                            <option value="{{Department.id}}">{{Department.deptname}}</option>
+                                            {% endfor %}
+                                        </select><br>
+                                        
+                                        <label>Employee Category</label>
+                                        <select id="Employee" class="form-control" name="empname">
+                                            {% for Employee in ademp %}
+                                            <option value="{{Employee.employee_cat_area}}">{{Employee.employee_cat_name}}</option>
+                                            {% endfor %}
+                                        </select><br>
+                                        
+                                        <label>Salary</label>
+                                        <input type="number" placeholder="Enter Salary" class="form-control" name="deptcode" required><br>
+                                        
+                                        <label>Join Date</label>
+                                        <input type="date" placeholder="Enter Join Date" autofocus class="form-control" name="deptname" required><br>
+                                        
+                                        <label for="exampleInputFile">File input</label>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" name='pict' id="exampleInputFile">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button">Upload</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="panel-body d-flex justify-content-between">
+                                        <button class="btn btn-default">Clear Form</button>
+                                        <button class="btn btn-primary pull-right">Submit</button>
+                                    </div>
+                                    
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+        <div class="col-md-6">
+
+            <!-- START DEFAULT DATATABLE -->
+            <div class="panel panel-default">
+                
+                <form method='post' >
+                    {% csrf_token %}
+                   
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form>
+                                    <div class="panel-body">
+                                        <label>class</label>
+                                        <select id="Employee" class="form-control" name="empname">
+                                            
+                                            <option>ygj</option>
+                                           
+                                        </select><br>
+                                        
+                                                                                                                                                                                                    
+                                    </div>
+                                    
+                                    <div class="panel-body d-flex justify-content-between">
+                                    <button class="btn btn-primary pull-right">Add</button>
+                                    </div>
+                                    
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+    
+
+
+{% endblock   %}
+

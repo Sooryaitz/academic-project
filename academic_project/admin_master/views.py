@@ -480,16 +480,20 @@ def subject(request):
     
     return render(request,'subject.html',context)
           
+
 def edit_sub_ajax(request):
-    id=request.GET['id']
-    responsedata=AcademicSubject.objects.get(id=id)
-    serialized_data={
-        'editname':responsedata.subjectclass,
-        # 'editcode':responsedata.employee_cat_area,
-        'editstatus':responsedata.subjectstatus,
+    id = request.GET.get('id')
+    responsedata = AcademicSubject.objects.get(id=id)
+    getdata = SubjectFore.objects.filter(subjectclass=id).values_list('classid__classname', flat=True)
+    
+    serialized_data = {
+        'editname': responsedata.classid,  # Replace 'subjectclass' with the correct field name
+        # 'editcode': responsedata.employee_cat_area,  # Uncomment this line if you want to include 'editcode'
+        'editstatus': responsedata.subjectstatus,
+        # 'getdata': list(getdata),  # Uncomment this line if you want to include 'getdata'
     }
+
     return JsonResponse(serialized_data)
-                      
 
 def update_sub_ajax(request):
     
@@ -502,7 +506,7 @@ def update_sub_ajax(request):
         # Update the department details in the 
         try:
             academic_Subject = AcademicSubject.objects.get(id=id)
-            if Academicdepartment.objects.exclude(id=id).filter(subjectclass=editname).exists():
+            if AcademicSubject.objects.exclude(id=id).filter(subjectclass=editname).exists():
                 return JsonResponse({'error':"Subject name already exist",'success':''})
             # if Academicdepartment.objects.exclude(id=id).filter(deptcode=editcode).exists():
             #     return JsonResponse({'error':"department code already exist",'success':''})
@@ -514,4 +518,25 @@ def update_sub_ajax(request):
         except AcademicSubject.DoesNotExist:
             return JsonResponse({'error':'Invalid request method','success':''})
         
-                  
+         
+def delete_sub_ajax(request):
+    if request.method=="GET":
+        sub_id=request.GET["id"]
+        try:
+            row=AcademicSubject.objects.get(id=sub_id)
+            row.delete()
+            return JsonResponse({'success':"row deleted successfully",'error':''})
+        except AcademicSubject.DoesNotExist:
+            return JsonResponse({'error': 'Invalid id..error 404','success':''}) 
+    else:
+         return JsonResponse({'error': 'Invalid request..error 404','success':''})     
+            
+def view_sub_ajax(request):
+    id=request.GET['id']
+    responsedata=AcademicSubject.objects.get(id=id)
+    serialized_data={
+        'editname':responsedata.subjectclass,
+        # 'editcode':responsedata.employee_cat_area,
+        'editstatus':responsedata.subjectstatus,
+    }
+    return JsonResponse(serialized_data)                        

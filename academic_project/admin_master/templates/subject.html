@@ -69,9 +69,9 @@
                                     <td>{{ i.subjectclass }}</td>
                                     <td>
                                         {% if i.subjectstatus == 1 %}
-                                            Active
+                                        <p class="badge badge-success"> Active
                                         {% else %}
-                                            Inactive
+                                        <p class="badge badge-danger"> Inactive
                                         {% endif %}
                                     </td>
                                     <td>
@@ -80,9 +80,11 @@
                                         <button class="fa fa-pencil" onclick="edit_subrow({{i.id}});" id="spinner{{i.id}}">
                                             {% comment %} <span  id= "spinner{{i.id}}"> </span> {% endcomment %}
                                         </button>
-                                        <button class="glyphicon glyphicon-trash"></button>
-                                        <button class="fa fa-eye"></button>
-
+                                        {% if  not i.subjectstatus == 1 %}
+                                        <button class="btn btn-primary btn-rounded" >
+                                            <span  id= "spinner{{i.id}}" class="fa fa-trash-o" onClick="delete_sub({{i.id}})" >  </button>
+                                                {% endif %} 
+                                        <button class="fa fa-eye" onclick="view_sub({{i.id}});" >  </button>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -134,8 +136,14 @@
         </div>
     </div>
 </div>
+
 <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/edit_sub_ajax" id="sfooter">
 <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/update_sub_ajax" id="spath">
+<input type="hidden" value="{{request.scheme}}://{{request.get_host}}/delete_sub_ajax" id="sdel">
+<input type="hidden" value="{{request.scheme}}://{{request.get_host}}/view_sub_ajax" id="sview">
+
+
+
 
 <div class="message-box animated fadeIn" data-sound="alert" id="mb-remove-row">
     <div class="mb-container">
@@ -155,6 +163,42 @@
     </div>
 </div>
 
+<div class="modal" id="modal_basic" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="defModalHead">View</h4>
+            </div>
+            <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    
+                    <input type="text" placeholder="Subject name" class="form-control" id="editsubname" class="panel-title">
+                </div>
+                
+               
+                <div class="col-md-6">
+                    <select class="form-control"  id="edtsubstat">
+                        <option value="1">Active</option>
+                        <option value="0">Deactivate</option>
+                    </select> 
+                </div> <div>
+                {% for i in sub %}
+                        {% if i.classstatus == 1 %}
+                            <div>
+                                <input type="checkbox" class="icheck" name="checkboxGroup" value="{{i.id}}"> {{i.classname}}
+                            </div>
+                        {% endif %}
+                    {% endfor %}   </div>
+                 </div> 
+                </div> 
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 {% endblock   %}
