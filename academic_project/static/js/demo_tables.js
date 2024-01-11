@@ -19,7 +19,7 @@
         var box = $("#mb-remove-row");
         box.addClass("open");
 
-        box.find(".mb-control-yes").on("click", function () {
+        box.find(".mb-control-yes").off("click").on("click", function () {
             box.removeClass("open");
             // AJAX call to the server to delete the row
             $.ajax({
@@ -178,9 +178,10 @@ function delete_des(rowId) {
     var box = $("#mb-remove-row");
     box.addClass("open");
 
-    box.find(".mb-control-yes").on("click", function () {
+    box.find(".mb-control-yes").off("click").on("click", function () {
         box.removeClass("open");
         // AJAX call to the server to delete the row
+        console.log("efraeh")
         $.ajax({
             url: document.getElementById('del').value,  // Replace with your actual Django URL
             type: 'GET',
@@ -271,7 +272,7 @@ function delete_qua(rowId) {
     var box = $("#mb-remove-row");
     box.addClass("open");
 
-    box.find(".mb-control-yes").on("click", function () {
+    box.find(".mb-control-yes").off("click").on("click", function () {
         box.removeClass("open");
         // AJAX call to the server to delete the row
         $.ajax({
@@ -364,7 +365,7 @@ function delete_class(rowId) {
     var box = $("#mb-remove-row");
     box.addClass("open");
 
-    box.find(".mb-control-yes").on("click", function () {
+    box.find(".mb-control-yes").off("click").on("click", function () {
         box.removeClass("open");
         // AJAX call to the server to delete the row
         $.ajax({
@@ -457,7 +458,7 @@ function delete_div(rowId) {
     var box = $("#mb-remove-row");
     box.addClass("open");
 
-    box.find(".mb-control-yes").on("click", function () {
+    box.find(".mb-control-yes").off("click").on("click", function () {
         box.removeClass("open");
         // AJAX call to the server to delete the row
         $.ajax({
@@ -550,7 +551,7 @@ function delete_emp(rowId) {
     var box = $("#mb-remove-row");
     box.addClass("open");
 
-    box.find(".mb-control-yes").on("click", function () {
+    box.find(".mb-control-yes").off("click").on("click", function () {
         box.removeClass("open");
         // AJAX call to the server to delete the row
         $.ajax({
@@ -674,7 +675,7 @@ function delete_sub(rowId) {
     var box = $("#mb-remove-row");
     box.addClass("open");
 
-    box.find(".mb-control-yes").on("click", function () {
+    box.find(".mb-control-yes").off("click").on("click", function () {
         box.removeClass("open");
         // AJAX call to the server to delete the row
         $.ajax({
@@ -727,3 +728,18 @@ $.ajax({
     } 
 });
 }
+function showdrowdown(){
+    
+    var empcat=document.getElementById("Employee").value;
+    var dropdown=document.getElementById("additionaldropdown")
+    console.log(dropdown.style);
+
+    if (empcat =='2'){
+       
+        dropdown.style.display = "block";
+    }else{
+        dropdown.style.display = "none";
+        
+    }
+
+    }

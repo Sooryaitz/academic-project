@@ -29,13 +29,13 @@
                     </ul>                                
                 </div>
                 
-                <form method='post' >
+               
                     {% csrf_token %}
                    
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <form>
+                                
                                     <div class="panel-body">
                                         <label>Name</label>
                                         <input type="text" placeholder="Enter name" autofocus class="form-control" name="deptname" required><br>
@@ -74,7 +74,7 @@
                                         </select><br>
                                         
                                         <label>Employee Category</label>
-                                        <select id="Employee" class="form-control" name="empname">
+                                        <select id="Employee" class="form-control" onchange="showdrowdown()" name="emp_cat_id">
                                             {% for Employee in ademp %}
                                             <option value="{{Employee.employee_cat_area}}">{{Employee.employee_cat_name}}</option>
                                             {% endfor %}
@@ -100,54 +100,88 @@
                                         <button class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                     
-                                </form>
+                                
                                 
                             </div>
                         </div>
                     </div>
-                </form>
+                
                 
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" style="display: none;"  id="additionaldropdown">
 
             <!-- START DEFAULT DATATABLE -->
             <div class="panel panel-default">
                 
-                <form method='post' >
+              
                     {% csrf_token %}
                    
-                    <div class="panel-body">
+                    <div class="panel-body" >
                         <div class="row">
                             <div class="col-md-12">
-                                <form>
+                                
                                     <div class="panel-body">
-                                        <label>class</label>
-                                        <select id="Employee" class="form-control" name="empname">
-                                            
-                                            <option>ygj</option>
-                                           
-                                        </select><br>
                                         
-                                                                                                                                                                                                    
-                                    </div>
-                                    
-                                    <div class="panel-body d-flex justify-content-between">
-                                    <button class="btn btn-primary pull-right">Add</button>
-                                    </div>
-                                    
-                                </form>
+                                        <div class="col-md-4">
+                                            <label>Class</label>
+                                            <select class="form-control class-select" name="qualifname">
+                                                {% for class in cls %}
+                                                <option value="{{ class.id }}">{{ class.classname }}</option>
+                                                {% endfor %}
+                                            </select><br>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Division</label>
+                                            <select class="form-control division-select" name="qualifname">
+                                                {% for Division in div %}
+                                                <option value="{{ Division.id }}">{{ Division.divisionname }}</option>
+                                                {% endfor %}
+                                            </select><br>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Subject</label>
+                                            <select class="form-control subject-select" name="empname">
+                                                {% for Subject in sub %}
+                                                <option value="{{ Subject.id }}">{{ Subject.subjectclass }}</option>
+                                                {% endfor %}
+                                            </select><br>
+                                            <span class="error-message" style="color: red;"></span><br>
+                                        </div>
+
+                                        
+                                        <!-- Button to add values to the list -->
+                                        <button id="addButton" class="btn btn-primary pull-right">Add</button>
+                                        
+                                
                                 
                             </div>
+                            
                         </div>
                     </div>
-                </form>
+                    
+                            
                 
             </div>
         </div>
-    </div>
-    
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>Division</th>
+                    <th>Subject</th>
+                </tr>
+            </thead>
+            <tbody id="dataBody">
+                <!-- Table body for added data -->
+            </tbody>
+        </table>
+       
+        
 </div>
+
+</div>
+
 
 
     

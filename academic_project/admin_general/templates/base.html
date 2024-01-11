@@ -119,11 +119,11 @@
                             <li><a href="{% static 'pages-error-500.html' %}"> Error 500</a></li>
                         </ul>
                     </li> {% endcomment %}
-                    {% comment %} <li class="xn-openable">
-                        <a href="#"><span class="fa fa-file-text-o"></span> <span class="xn-text">Layouts</span></a>
+                    <li class="xn-openable">
+                        <a href="#"><span class="fa fa-file-text-o"></span> <span class="xn-text">Employee Category</span></a>
                         <ul>
-                            <li><a href="{% static 'layout-boxed.html' %}">Boxed</a></li>
-                            <li><a href="{% static 'layout-nav-toggled.html' %}">Navigation Toggled</a></li>
+                            <li><a href="{% url 'admin_emp_add' %}">Add Employee</a></li>
+                            {% comment %} <li><a href="{% static 'layout-nav-toggled.html' %}">Navigation Toggled</a></li> 
                             <li><a href="{% static 'layout-nav-top.html' %}">Navigation Top</a></li>
                             <li><a href="{% static 'layout-nav-right.html' %}">Navigation Right</a></li>
                             <li><a href="{% static 'layout-nav-top-fixed.html' %}">Top Navigation Fixed</a></li>                            
@@ -131,7 +131,7 @@
                             <li><a href="{% static 'layout-frame-left.html' %}">Frame Left Column</a></li>
                             <li><a href="{% static 'layout-frame-right.html' %}">Frame Right Column</a>
                     
-                    <li class="xn-title">Components</li> {% endcomment %}
+                    <li class="xn-title">Components</li>{% endcomment %}
                     {% comment %} <li class="xn-openable">
                         <li class="xn-openable">
                             <a href="#"><span class="fa fa-cogs"></span> <span class="xn-text">UI Kits</span></a>                        
@@ -447,10 +447,68 @@
        
 
         </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    (function($) {
+        $(document).ready(function() {
+            $('#addButton').click(function() {
+                var selectedClass = $('.class-select').find(':selected').text();
+                var selectedDivision = $('.division-select').find(':selected').text();
+                var selectedSubject = $('.subject-select').find(':selected').text();
 
-        
+                var newRow = '<tr>' +
+                    '<td>' + selectedClass + '</td>' +
+                    '<td>' + selectedDivision + '</td>' +
+                    '<td>' + selectedSubject + '</td>' +
+                    '<td><button class="deleteRow btn btn-danger">Delete</button></td>' +
+                    '</tr>';
 
+                $('#dataBody').append(newRow);
+            });
 
+            $('#dataBody').on('click', '.deleteRow', function() {
+                $(this).closest('tr').remove();
+            });
+        });
+    })(jQuery);
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script type="text/javascript">
+    (function($) {
+        $(document).ready(function() {
+            // Attach a change event listener to the class-select dropdown
+            $('.class-select').change(function() {
+                // Get the selected class id
+                var selectedClassId = $(this).val();
+
+                // Make an AJAX request to get subjects based on the selected class id
+                $.ajax({
+                    url: '/get_subjects_for_class/',
+                    method: 'GET',
+                    data: { class_id: selectedClassId },
+                    success: function(data) {
+                        // Clear existing options
+                        $('.subject-select').empty();
+
+                        // Add a default option
+                        $('.subject-select').append('<option value="">Select Subject</option>');
+
+                        // Add new options based on the received data
+                        for (var i = 0; i < data.length; i++) {
+                            var optionValue = data[i].subjectid__id;
+                            var optionText = data[i].subjectid__subjectclass;
+                            $('.subject-select').append('<option value="' + optionValue + '">' + optionText + '</option>');
+                        }
+                    },
+                    error: function(error) {
+                        console.log('Error fetching subjects: ' + error);
+                    }
+                });
+            });
+        });
+    })(jQuery);
+</script>
     
 
        
