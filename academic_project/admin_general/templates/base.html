@@ -28,7 +28,7 @@
                     <li class="xn-logo">
                         <a href="">SOORYA ITZ</a>
                         <a href="#" class="x-navigation-control"></a>
-                        </li>
+                        
                         <li class="xn-profile">
                             <a href="#" class="profile-mini">
                                 <img src="{% static 'assets/images/users/avatar.jpg' %}" alt="John Doe"/>
@@ -123,8 +123,9 @@
                         <a href="#"><span class="fa fa-file-text-o"></span> <span class="xn-text">Employee Category</span></a>
                         <ul>
                             <li><a href="{% url 'admin_emp_add' %}">Add Employee</a></li>
-                            {% comment %} <li><a href="{% static 'layout-nav-toggled.html' %}">Navigation Toggled</a></li> 
-                            <li><a href="{% static 'layout-nav-top.html' %}">Navigation Top</a></li>
+                            <li><a href="{% url 'emp_list' %}">Employee List</a></li> 
+                    </li>        
+                            {% comment %} <li><a href="{% static 'layout-nav-top.html' %}">Navigation Top</a></li>
                             <li><a href="{% static 'layout-nav-right.html' %}">Navigation Right</a></li>
                             <li><a href="{% static 'layout-nav-top-fixed.html' %}">Top Navigation Fixed</a></li>                            
                             <li><a href="{% static 'layout-nav-custom.html' %}">Custom Navigation</a></li>
@@ -434,12 +435,12 @@
         <script>
             // Check for success_message and show notification
             
-            {% if successmessage %}
+         {% if successmessage %}
             document.addEventListener('DOMContentLoaded', function () {
             noty({ text: '{{successmessage}}', layout: 'topCenter',timeout: 2000 ,type:'success' });
           });
-        {% endif %}
-        {% if errormessage %}
+            {% endif %}
+         {% if errormessage %}
         document.addEventListener('DOMContentLoaded', function () {
         noty({ text: '{{errormessage}}', layout: 'topCenter',timeout: 2000 ,type:'error' });
       });
@@ -448,69 +449,80 @@
 
         </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript">
-    (function($) {
-        $(document).ready(function() {
-            $('#addButton').click(function() {
-                var selectedClass = $('.class-select').find(':selected').text();
-                var selectedDivision = $('.division-select').find(':selected').text();
-                var selectedSubject = $('.subject-select').find(':selected').text();
-
-                var newRow = '<tr>' +
-                    '<td>' + selectedClass + '</td>' +
-                    '<td>' + selectedDivision + '</td>' +
-                    '<td>' + selectedSubject + '</td>' +
-                    '<td><button class="deleteRow btn btn-danger">Delete</button></td>' +
-                    '</tr>';
-
-                $('#dataBody').append(newRow);
-            });
-
-            $('#dataBody').on('click', '.deleteRow', function() {
-                $(this).closest('tr').remove();
-            });
-        });
-    })(jQuery);
-</script>
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script type="text/javascript">
-    (function($) {
-        $(document).ready(function() {
-            // Attach a change event listener to the class-select dropdown
-            $('.class-select').change(function() {
-                // Get the selected class id
-                var selectedClassId = $(this).val();
-
-                // Make an AJAX request to get subjects based on the selected class id
-                $.ajax({
-                    url: '/get_subjects_for_class/',
-                    method: 'GET',
-                    data: { class_id: selectedClassId },
-                    success: function(data) {
-                        // Clear existing options
-                        $('.subject-select').empty();
-
-                        // Add a default option
-                        $('.subject-select').append('<option value="">Select Subject</option>');
-
-                        // Add new options based on the received data
-                        for (var i = 0; i < data.length; i++) {
-                            var optionValue = data[i].subjectid__id;
-                            var optionText = data[i].subjectid__subjectclass;
-                            $('.subject-select').append('<option value="' + optionValue + '">' + optionText + '</option>');
+        <script type="text/javascript">
+            (function($) {
+                $(document).ready(function() {
+                    var addedRows = {}; // Corrected variable name
+                    $('#addButton').click(function() {
+                        var selectedClass = $('.class-select').find(':selected').text();
+                        var selectedDivision = $('.division-select').find(':selected').text();
+                        var selectedSubject = $('.subject-select').find(':selected').text();
+        
+                        var classid = $('#classid').val();
+                        var divisionid = $('#divisionid').val();
+                        var subjectid = $('#subjectid').val();
+        
+                        var rowKey = selectedClass + '_' + selectedDivision + '_' + selectedSubject; // Corrected variable name
+                        if (addedRows[rowKey]) {
+                            alert("This combination already exists");
+                            return false;
                         }
-                    },
-                    error: function(error) {
-                        console.log('Error fetching subjects: ' + error);
-                    }
+                        addedRows[rowKey] = true; // Corrected variable name
+                        var newRow = '<tr>' +
+                            '<td>' + selectedClass + '<input type="hidden" value="' + classid + '" name="classids"></td>' +
+                            '<td>' + selectedDivision + '<input type="hidden" value="' + divisionid + '" name="divisionids"></td>' +
+                            '<td>' + selectedSubject + '<input type="hidden" value="' + subjectid + '" name="subjectids"></td>' +
+                            '<td><button class="deleteRow btn btn-danger">Delete</button></td>' +
+                            '</tr>';
+        
+                        $('#dataBody').append(newRow);
+                    });
+        
+                    $('#dataBody').on('click', '.deleteRow', function() {
+                        $(this).closest('tr').remove();
+                    });
                 });
-            });
-        });
-    })(jQuery);
-</script>
-    
-
+            })(jQuery);
+        </script>
+        
+        
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script type="text/javascript">
+            (function($) {
+                $(document).ready(function() {
+                    // Attach a change event listener to the class-select dropdown
+                    $('.class-select').change(function() {
+                        // Get the selected class id
+                        var selectedClassId = $(this).val();
+        
+                        // Make an AJAX request to get subjects based on the selected class id
+                        $.ajax({
+                            url: '/get_subjects_for_class/',
+                            method: 'GET',
+                            data: { class_id: selectedClassId },
+                            success: function(data) {
+                                // Clear existing options
+                                var subjectSelect = $('.subject-select');
+                                subjectSelect.empty();
+        
+                                // Add a default option
+                                subjectSelect.append('<option value="">Select Subject</option>');
+        
+                                // Add new options based on the received data
+                                $.each(data, function(index, subject) {
+                                    subjectSelect.append('<option value="' + subject.subjectid__id + '">' + subject.subjectid__subjectclass + '</option>');
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error fetching subjects:', error);
+                                // You can display an alert or perform other error handling here
+                            }
+                        });
+                    });
+                });
+            })(jQuery);
+        </script>
+        
        
         
         <!-- END TEMPLATE -->

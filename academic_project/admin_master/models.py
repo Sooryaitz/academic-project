@@ -43,6 +43,7 @@ class AcademicSubject(models.Model):
 class SubjectFore(models.Model):
     classid=models.ForeignKey("Academicclass", on_delete=models.CASCADE)
     subjectid=models.ForeignKey("AcademicSubject", on_delete=models.CASCADE)
+    
 
 
     

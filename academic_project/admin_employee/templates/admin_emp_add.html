@@ -9,7 +9,7 @@
 
 <!-- PAGE TITLE -->
 <div class="page-title">                    
-    <h2><span class="fa fa-arrow-circle-o-left"></span>Employee Registration</h2>
+    <h2><span class="fa fa-arrow-circle-o-left"></span>Employee Registration{{hhh}}</h2>
 </div>
 <!-- END PAGE TITLE -->                
 
@@ -29,7 +29,7 @@
                     </ul>                                
                 </div>
                 
-               
+<form method="POST" action="{% url 'admin_emp_view' %}" enctype="multipart/form-data">
                     {% csrf_token %}
                    
                     <div class="panel-body">
@@ -37,68 +37,149 @@
                             <div class="col-md-12">
                                 
                                     <div class="panel-body">
-                                        <label>Name</label>
-                                        <input type="text" placeholder="Enter name" autofocus class="form-control" name="deptname" required><br>
+                                        <label>First Name</label>
+                                        <input type="text" placeholder="Enter name" autofocus class="form-control" name="fname" required><br>
+                                        <label>Last Name</label>
+                                        <input type="text" placeholder="Enter name" autofocus class="form-control" name="lname" required><br>
                                         
+                                        <label for="id_gender">Gender:</label>
+                                        <select name="gender" id="id_gender">
+                                            <option value="0">Male</option>
+                                            <option value="1">Female</option>
+                                            <option value="2">Other</option>
+                                        </select><br>
+
                                         <label>Date of Birth</label>
-                                        <input type="date" placeholder="Enter DOB" class="form-control" name="deptcode" required><br>
+                                        <input type="date" placeholder="Enter DOB" class="form-control" name="dob" required><br>
                                         
                                         <label>Mobile</label>
-                                        <input type="number" placeholder="Enter mobile" autofocus class="form-control" name="deptname" required><br>
+                                        <input type="number" placeholder="Enter mobile" autofocus class="form-control" name="phone" required><br>
                                         
                                         <label>Email</label>
-                                        <input type="Email" placeholder="Enter email" class="form-control" name="deptcode" required><br>
+                                        <input type="Email" placeholder="Enter email" class="form-control" name="email" required><br>
                                         
                                         <label>Address</label>
-                                        <input type="address" placeholder="Enter address" autofocus class="form-control" name="deptname" required><br>
+                                        <input type="address" placeholder="Enter address" autofocus class="form-control" name="address" required><br>
                                         
                                         <label>Qualification</label>
-                                        <select id="Qualification" class="form-control" name="qualifname">
-                                            {% for Qualification in qualif %}
+                                        <select id="Qualification" class="form-control" name="qualification">
+                                            {% for Qualification in qualification_data %}
                                             <option value="{{Qualification.id}}">{{Qualification.qualificationname}}</option>
                                             {% endfor %}
                                         </select><br>
                                         
                                         <label>Designation</label>
-                                        <select id="Designation" class="form-control" name="designame">
-                                            {% for designation in emp %}
+                                        <select id="Designation" class="form-control" name="designation">
+                                            {% for designation in designation_data %}
                                             <option value="{{designation.id}}">{{designation.designame}}</option>
                                             {% endfor %}
                                         </select><br>
                                         
                                         <label>Department</label>
-                                        <select id="Department" class="form-control" name="deptname">
-                                            {% for Department in dept %}
+                                        <select id="Department" class="form-control" name="department">
+                                            {% for Department in department_data %}
                                             <option value="{{Department.id}}">{{Department.deptname}}</option>
                                             {% endfor %}
                                         </select><br>
                                         
                                         <label>Employee Category</label>
                                         <select id="Employee" class="form-control" onchange="showdrowdown()" name="emp_cat_id">
-                                            {% for Employee in ademp %}
-                                            <option value="{{Employee.employee_cat_area}}">{{Employee.employee_cat_name}}</option>
+                                            {% for Employee in employee_data %}
+                                            <option value='{ "id": {{ Employee.id }}, "area": "{{ Employee.employee_cat_area }}" }'>{{Employee.employee_cat_name}}</option>
                                             {% endfor %}
                                         </select><br>
                                         
                                         <label>Salary</label>
-                                        <input type="number" placeholder="Enter Salary" class="form-control" name="deptcode" required><br>
+                                        <input type="number" placeholder="Enter Salary" class="form-control" name="salary" required><br>
                                         
                                         <label>Join Date</label>
-                                        <input type="date" placeholder="Enter Join Date" autofocus class="form-control" name="deptname" required><br>
+                                        <input type="date" placeholder="Enter Join Date" autofocus class="form-control" name="joindate" required><br>
                                         
                                         <label for="exampleInputFile">File input</label>
                                         <div class="input-group">
-                                            <input type="file" class="form-control" name='pict' id="exampleInputFile">
+                                            <input type="file" class="form-control" name='photo' id="exampleInputFile">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-default" type="button">Upload</button>
                                             </span>
                                         </div>
                                     </div>
+                                    <div class="col-md-12" style="display: none;"  id="additionaldropdown">
+
+                                        <!-- START DEFAULT DATATABLE -->
+                                        <div class="panel panel-default">
+                                            
+                                          
+                                    
+                                               
+                                                <div class="panel-body" >
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            
+                                                                <div class="panel-body">
+                                                                    
+                                                                    <div class="col-md-4">
+                                                                        <label>Class</label>
+                                                                        <select class="form-control class-select" id="classid">
+                                                                            {% for class in class_data %}
+                                                                            <option value="{{ class.id }}">{{ class.classname }}</option>
+                                                                            {% endfor %}
+                                                                        </select><br>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label>Division</label>
+                                                                        <select class="form-control division-select" id="divisionid">
+                                                                            {% for Division in division_data %}
+                                                                            <option value="{{ Division.id }}">{{ Division.divisionname }}</option>
+                                                                            {% endfor %}
+                                                                        </select><br>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label>Subject</label>
+                                                                        <select class="form-control subject-select" id="subjectid">
+                                                                            {% for Subject in subject_data %}
+                                                                            <option value="{{ Subject.id }}">{{ Subject.subjectclass }}</option>
+                                                                            {% endfor %}
+                                                                        </select><br>
+                                                                        <span class="error-message" style="color: red;"></span><br>
+                                                                    </div>
+                            
+                                                                    
+                                                                    <!-- Button to add values to the list -->
+                                                                    <button id="addButton" class="btn btn-primary pull-right" type="button" onclick="hai()">Add</button>
+                                                                    
+                                                            
+                                                            
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    </div>
+                                                
+                                                        
+                                            
+                                                </div>
+                                        </div>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Class</th>
+                                                <th>Division</th>
+                                                <th>Subject</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dataBody">
+                                            <!-- Table body for added data -->
+                                            
+                                        </tbody>
+                                    </table>
+                                   
+                                    
+                                    </div>
                                     
                                     <div class="panel-body d-flex justify-content-between">
                                         <button class="btn btn-default">Clear Form</button>
-                                        <button class="btn btn-primary pull-right">Submit</button>
+                                        <button class="btn btn-primary pull-right" >Submit</button>
                                     </div>
+
                                     
                                 
                                 
@@ -109,13 +190,13 @@
                 
             </div>
         </div>
-        <div class="col-md-6" style="display: none;"  id="additionaldropdown">
+        {% comment %} <div class="col-md-6" style="display: none;"  id="additionaldropdown">
 
             <!-- START DEFAULT DATATABLE -->
             <div class="panel panel-default">
                 
               
-                    {% csrf_token %}
+        
                    
                     <div class="panel-body" >
                         <div class="row">
@@ -125,24 +206,24 @@
                                         
                                         <div class="col-md-4">
                                             <label>Class</label>
-                                            <select class="form-control class-select" name="qualifname">
-                                                {% for class in cls %}
+                                            <select class="form-control class-select" id="classid">
+                                                {% for class in class_data %}
                                                 <option value="{{ class.id }}">{{ class.classname }}</option>
                                                 {% endfor %}
                                             </select><br>
                                         </div>
                                         <div class="col-md-4">
                                             <label>Division</label>
-                                            <select class="form-control division-select" name="qualifname">
-                                                {% for Division in div %}
+                                            <select class="form-control division-select" id="divisionid">
+                                                {% for Division in division_data %}
                                                 <option value="{{ Division.id }}">{{ Division.divisionname }}</option>
                                                 {% endfor %}
                                             </select><br>
                                         </div>
                                         <div class="col-md-4">
                                             <label>Subject</label>
-                                            <select class="form-control subject-select" name="empname">
-                                                {% for Subject in sub %}
+                                            <select class="form-control subject-select" id="subjectid">
+                                                {% for Subject in subject_data %}
                                                 <option value="{{ Subject.id }}">{{ Subject.subjectclass }}</option>
                                                 {% endfor %}
                                             </select><br>
@@ -151,19 +232,19 @@
 
                                         
                                         <!-- Button to add values to the list -->
-                                        <button id="addButton" class="btn btn-primary pull-right">Add</button>
+                                        <button id="addButton" class="btn btn-primary pull-right" type="button" onclick="hai()">Add</button>
                                         
                                 
                                 
                             </div>
                             
                         </div>
-                    </div>
+                        </div>
                     
                             
                 
+                    </div>
             </div>
-        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -174,15 +255,16 @@
             </thead>
             <tbody id="dataBody">
                 <!-- Table body for added data -->
+                
             </tbody>
         </table>
        
         
-</div>
+        </div> {% endcomment %}
 
-</div>
+    </div>
 
-
+</form>
 
     
 

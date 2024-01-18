@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-content-wrap">                
+    <div class="row">
+        <div class="col-md-12">
+            <!-- START DEFAULT DATATABLE -->
+            <div class="panel panel-default">
+                <div class="panel-heading">                                
+                    <h2>Employee List</h2>
+                    <ul class="panel-controls">
+                        <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                    </ul>                                
+                </div>
+                <div class="panel-body">
+                    <table class="table datatable">
+                        <thead>
+                            <tr>
+                                <th>Sl No</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Department</th>
+                                <th>Join Date</th>
+                                <th>QR Code</th>
+                                <th>Photo</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employee in employees %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ employee.empname }}</td>
+                                <td>{{ employee.email }}</td>
+                                <td>{{ employee.mobile }}</td>
+                                <td>{{ employee.dptid.deptname }}</td>
+                                <td>{{ employee.joindate }}</td>
+                                {% if employee.barcode %}
+                                <td><img src="{{ employee.barcode.url }}" alt="Employee barcode" style="max-width: 80px; max-height: 80px; cursor: pointer;" onclick="showqrcode('{{employee.barcode.url}}')"></td>
+                                {% endif %}
+                                {% if employee.photo %}
+                                <td><img src="{{ employee.photo.url }}" alt="Employee photo" style="max-width: 80px; max-height: 80px;" ></td>
+                                {% else %}
+                                 <td> no data </td>
+                                {% endif %}
+
+                                <td>{% if employee.status %}
+                                    <span class="label label-success">Active</span>
+                                    {% else %}
+                                    <span class="label label-danger">Deactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <!-- Add action links here, such as edit, delete, etc. -->
+                                    <a href="#"  class= "fa fa-pencil"></a> |
+                                    <a href="#" class= "fa fa-trash-o"></a> |
+                                    <a href="#" class= "fa fa-eye" ></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END DEFAULT DATATABLE -->
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -729,17 +729,19 @@ $.ajax({
 });
 }
 function showdrowdown(){
-    
-    var empcat=document.getElementById("Employee").value;
-    var dropdown=document.getElementById("additionaldropdown")
-    console.log(dropdown.style);
-
-    if (empcat =='2'){
-       
-        dropdown.style.display = "block";
-    }else{
-        dropdown.style.display = "none";
-        
+    var employeeType = document.getElementById("Employee").value;
+    console.log(employeeType);
+        var selectedValue = JSON.parse(employeeType);
+        var teacherFields = document.getElementById("additionaldropdown");
+        if (selectedValue.area === "2") {
+            teacherFields.style.display = "block";
+        } else {
+            teacherFields.style.display = "none";
+        }
     }
+    
+    function showqrcode(imageUrl){
+        $('qrCodeImage').attr('src', imageUrl);
+        $('qrCodeModal').modal('show');
 
     }
