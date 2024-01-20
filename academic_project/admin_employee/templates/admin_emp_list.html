@@ -53,7 +53,10 @@
                                 </td>
                                 <td>
                                     <!-- Add action links here, such as edit, delete, etc. -->
-                                    <a href="#"  class= "fa fa-pencil"></a> |
+                                    <a href="{% url 'admin_emp_edit' itm_id=employee.id %}" class="btn btn-default btn-rounded btn-sm">
+                                    <span class="fa fa-pencil"></span></a>
+
+                                    <button class="btn btn-default btn-rounded btn-sm"><span class="fa fa-pencil"></span></button> |
                                     <a href="#" class= "fa fa-trash-o"></a> |
                                     <a href="#" class= "fa fa-eye" ></a>
                                 </td>

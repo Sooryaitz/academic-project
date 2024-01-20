@@ -29,7 +29,7 @@
                     </ul>                                
                 </div>
                 
-<form method="POST" action="{% url 'admin_emp_view' %}" enctype="multipart/form-data">
+<form method="POST" action="{% url 'admin_emp_edit' itm_id=data.id %}" enctype="multipart/form-data">
                     {% csrf_token %}
                    
                     <div class="panel-body">
@@ -38,66 +38,75 @@
                                 
                                     <div class="panel-body">
                                         <label>First Name</label>
-                                        <input type="text" placeholder="Enter name" autofocus class="form-control" name="fname" required><br>
-                                        <label>Last Name</label>
-                                        <input type="text" placeholder="Enter name" autofocus class="form-control" name="lname" required><br>
+                                        <input type="text" placeholder="Enter name" autofocus class="form-control" value="{{data.empname}}" name="fname" required><br>
+                                       
                                         
                                         <label for="id_gender">Gender:</label>
-                                        <select name="gender" id="id_gender">
-                                            <option value="0">Male</option>
-                                            <option value="1">Female</option>
-                                            <option value="2">Other</option>
+                                        <select name="gender"  value="{{data.gender}}"  id="id_gender">
+                                            <option value="0" {% if obj.gender == 0 %}selected{% endif %}>Male</option>
+                                            <option value="1" {% if obj.gender == 1 %}selected{% endif %}>Female</option>
+                                            <option value="2" {% if obj.gender == 2 %}selected{% endif %}>Other</option>
                                         </select><br>
 
                                         <label>Date of Birth</label>
-                                        <input type="date" placeholder="Enter DOB" class="form-control" name="dob" required><br>
-                                        
+                                        <input type="date" placeholder="Enter DOB" class="form-control"  value="{{data.dob|date:'Y-m-d'}}" name="dob" required><br>
+                                      
                                         <label>Mobile</label>
-                                        <input type="number" placeholder="Enter mobile" autofocus class="form-control" name="phone" required><br>
-                                        
+                                        <input type="number" placeholder="Enter mobile" autofocus class="form-control"  value="{{data.mobile}}" name="phone" required><br>
+                                      
                                         <label>Email</label>
-                                        <input type="Email" placeholder="Enter email" class="form-control" name="email" required><br>
+                                        <input type="Email" placeholder="Enter email" class="form-control" value="{{data.email}}" name="email" required><br>
                                         
                                         <label>Address</label>
-                                        <input type="address" placeholder="Enter address" autofocus class="form-control" name="address" required><br>
+                                        <textarea  class="form-control" placeholder="Enter address"  name="address" required autofocus> {% if data.address %}{{ data.address }}{% endif %}  </textarea> <br>
                                         
                                         <label>Qualification</label>
-                                        <select id="Qualification" class="form-control" name="qualification">
-                                            {% for Qualification in qualification_data %}
-                                            <option value="{{Qualification.id}}">{{Qualification.qualificationname}}</option>
+                                        <select id="Qualification" class="form-control" value="{{data.qdata}}"  name="qualification">
+                                            {% for Qualification in qdata %}
+                                            <option value="{{Qualification.id}}" {% if data.qualifid.id == Qualification.id %} selected {% endif %} >{{Qualification.qualificationname}}</option>
                                             {% endfor %}
                                         </select><br>
-                                        
-                                        <label>Designation</label>
+                                       
+                                                <label>Status</label>                                       
+                                                <select class="form-control" id="editstatus" name="emstatus">
+                                                    <option value="1" {% if data.status == 1 %}selected{% endif %}>Active</option>
+                                                    <option value="0" {% if data.status == 0 %}selected{% endif %}>Deactive</option>
+                                                </select> <br>
+                                      
+                                        {% comment %} <label>Designation</label>
                                         <select id="Designation" class="form-control" name="designation">
                                             {% for designation in designation_data %}
                                             <option value="{{designation.id}}">{{designation.designame}}</option>
                                             {% endfor %}
-                                        </select><br>
+                                        </select><br> {% endcomment %}
                                         
-                                        <label>Department</label>
+                                        {% comment %} <label>Department</label>
                                         <select id="Department" class="form-control" name="department">
                                             {% for Department in department_data %}
                                             <option value="{{Department.id}}">{{Department.deptname}}</option>
                                             {% endfor %}
-                                        </select><br>
+                                        </select><br> {% endcomment %}
                                         
-                                        <label>Employee Category</label>
+                                        {% comment %} <label>Employee Category</label>
                                         <select id="Employee" class="form-control" onchange="showdrowdown()" name="emp_cat_id">
                                             {% for Employee in employee_data %}
                                             <option value='{ "id": {{ Employee.id }}, "area": "{{ Employee.employee_cat_area }}" }'>{{Employee.employee_cat_name}}</option>
                                             {% endfor %}
-                                        </select><br>
+                                        </select><br> {% endcomment %}
                                         
-                                        <label>Salary</label>
-                                        <input type="number" placeholder="Enter Salary" class="form-control" name="salary" required><br>
+                                        {% comment %} <label>Salary</label>
+                                        <input type="number" placeholder="Enter Salary" class="form-control" name="salary" required><br> {% endcomment %}
                                         
                                         <label>Join Date</label>
-                                        <input type="date" placeholder="Enter Join Date" autofocus class="form-control" name="joindate" required><br>
+                                        <input type="date" placeholder="Enter Join Date" autofocus class="form-control"  value="{{data.joindate|date:'Y-m-d'}}" name="joindate" required><br>
                                         
                                         <label for="exampleInputFile">File input</label>
                                         <div class="input-group">
                                             <input type="file" class="form-control" name='photo' id="exampleInputFile">
+                                            {% if data.photo %}
+                                                        <br>
+                                                        <img src="{{ data.photo.url }}" alt="Employee Photo" style="max-width: 200px; max-height: 200px;">
+                                                {% endif %}
                                             <span class="input-group-btn">
                                                 <button class="btn btn-default" type="button">Upload</button>
                                             </span>
@@ -107,10 +116,7 @@
 
                                         <!-- START DEFAULT DATATABLE -->
                                         <div class="panel panel-default">
-                                            
-                                          
-                                    
-                                               
+                                                       
                                                 <div class="panel-body" >
                                                     <div class="row">
                                                         <div class="col-md-12">

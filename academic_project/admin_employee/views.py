@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from admin_master.models import Academicclass,Academicqualification,Academicdivision,Academicdepartment,Academicdesignation,AcademicSubject,Academicemployee,SubjectFore
 from .models import adminemp,empdesig,empdpt,salary,scd
 from django.http import JsonResponse
@@ -174,7 +174,35 @@ def emp_list(request):
      employees  = adminemp.objects.all()
      return render(request, 'admin_emp_list.html',{'employees': employees})
  
-def admin_emp_edit(request):
-    mob=adminemp.objects.filter(status=1)
-    return render(request, 'admin_emp_edit.html',{'mob':mob})
- 
+def admin_emp_edit(request,itm_id):
+    msg=""
+    if request.POST:
+        name=request.POST['fname']
+        dob=request.POST['dob']
+        gender=request.POST['gender']
+        mobile=request.POST['phone']
+        email=request.POST['email']
+        address=request.POST['address']
+        joindate=request.POST['joindate']
+        qualification=request.POST['qualification']
+        qid=Academicqualification.objects.get(id= qualification)
+        photo=request.FILES['photo']
+
+        obj=adminemp.objects.get(id=itm_id)
+        obj.empname = name
+        obj.dob = dob
+        obj.gender = gender
+        obj.mobile = mobile
+        obj.email = email
+        obj.address = address
+        obj.joindate = joindate
+        obj.qualifid = qid
+        obj.photo = photo
+        obj.status=request.POST['emstatus']
+        obj.save()
+            
+        return redirect('emp_list')
+    obj=adminemp.objects.get(id=itm_id)
+    qualif=Academicqualification.objects.filter(qualificationstatus=1)
+    return render(request,'admin_emp_edit.html',{'data':obj,'name':msg,'qdata':qualif})
+    
